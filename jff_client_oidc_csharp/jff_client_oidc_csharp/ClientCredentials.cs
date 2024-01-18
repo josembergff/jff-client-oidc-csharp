@@ -56,7 +56,7 @@ namespace jff_client_oidc_csharp
                     try
                     {
                         var tokenEndpointResponse = await client.GetDiscoveryDocumentAsync(urlAuthority);
-                        if (tokenEndpointResponse.IsError && !string.IsNullOrEmpty(tokenEndpointResponse?.TokenEndpoint))
+                        if (tokenEndpointResponse.IsError || string.IsNullOrEmpty(tokenEndpointResponse?.TokenEndpoint))
                         {
                             objReturn.ListErrors.Add($"An error has occurred in request initial configurations to '{urlAuthority}'.");
                             objReturn.ListErrors.Add(tokenEndpointResponse.Error);
