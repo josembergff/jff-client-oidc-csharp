@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="jff_client_oidc_csharp" Version="1.0.1" />
+    <PackageReference Include="jff_client_oidc_csharp" Version="1.0.2" />
   </ItemGroup>
 
 </Project>
