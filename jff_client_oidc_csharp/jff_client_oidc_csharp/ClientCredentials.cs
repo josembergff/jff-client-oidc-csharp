@@ -1,12 +1,12 @@
-﻿using IdentityModel.Client;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net.Http;
 using System;
 using System.Text;
 using System.Threading.Tasks;
 using jff_client_oidc_csharp.Models;
-using static IdentityModel.OidcConstants;
+using System.Linq;
+using System.Net.Http.Headers;
 
 namespace jff_client_oidc_csharp
 {
@@ -81,7 +81,7 @@ namespace jff_client_oidc_csharp
 
             if (!string.IsNullOrEmpty(accessToken) && objReturn.Success)
             {
-                apiClient.SetBearerToken(accessToken);
+                apiClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
                 objReturn.Result = accessToken;
             }
 
@@ -95,31 +95,37 @@ namespace jff_client_oidc_csharp
             {
                 try
                 {
-                    var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+                    var dict = new Dictionary<string, string>();
+                    dict.Add("grant_type", "client_credentials");
+                    dict.Add("client_id", clientId);
+                    dict.Add("client_secret", clientSecret);
+                    if (scopes?.Any() == true)
                     {
-                        Address = urlToken,
-                        ClientId = clientId,
-                        ClientSecret = clientSecret,
-                        Scope = string.Join(" ", scopes)
-                    });
+                        var uniqueScope = string.Join("", scopes);
+                        dict.Add("scope", uniqueScope);
+                    }
+                    var req = new HttpRequestMessage(HttpMethod.Post, urlToken) { Content = new FormUrlEncodedContent(dict) };
+                    var tokenResponse = await client.SendAsync(req);
 
-                    if (tokenResponse.IsError)
+                    if (tokenResponse.IsSuccessStatusCode)
                     {
-                        objReturn.ListErrors.Add($"An error has occurred in request to '{urlToken}'.");
-                        objReturn.ListErrors.Add(tokenResponse.Error);
-                        objReturn.Extract(tokenResponse.Exception);
-                        accessToken = string.Empty;
+                        string objReturnString = await tokenResponse.Content.ReadAsStringAsync();
+                        var objToken = JsonConvert.DeserializeObject<DefaultResponseTokenModel>(objReturnString);
+                        if (objToken.expires_in > 0)
+                        {
+                            expireDate = DateTime.Now.AddSeconds(objToken.expires_in);
+                        }
+
+                        accessToken = objToken.access_token ?? string.Empty;
+
+                        objReturn.Result = accessToken;
                     }
                     else
                     {
-                        if (tokenResponse.ExpiresIn > 0)
-                        {
-                            expireDate = DateTime.Now.AddSeconds(tokenResponse.ExpiresIn);
-                        }
-
-                        accessToken = tokenResponse.AccessToken ?? string.Empty;
-
-                        objReturn.Result = accessToken;
+                        objReturn.ListErrors.Add($"An error has occurred in request to '{urlToken}'.");
+                        var errorContent = await tokenResponse.Content.ReadAsStringAsync();
+                        objReturn.Error = errorContent;
+                        accessToken = string.Empty;
                     }
                 }
                 catch (Exception ex) { objReturn.Extract(ex); }
