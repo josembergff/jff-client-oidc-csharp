@@ -55,18 +55,20 @@ namespace jff_client_oidc_csharp
                 {
                     try
                     {
-                        var tokenEndpointResponse = await client.GetDiscoveryDocumentAsync(urlAuthority);
-                        if (tokenEndpointResponse.IsError || string.IsNullOrEmpty(tokenEndpointResponse?.TokenEndpoint))
+                        HttpResponseMessage tokenEndpointResponse = await client.GetAsync($"{urlAuthority}/.well-known/openid-configuration");
+                        if (tokenEndpointResponse.IsSuccessStatusCode)
                         {
-                            objReturn.ListErrors.Add($"An error has occurred in request initial configurations to '{urlAuthority}'.");
-                            objReturn.ListErrors.Add(tokenEndpointResponse.Error);
-                            objReturn.Extract(tokenEndpointResponse.Exception);
-                            accessToken = string.Empty;
+                            string objReturnString = await tokenEndpointResponse.Content.ReadAsStringAsync();
+                            var objToken = JsonConvert.DeserializeObject<DefaultConfigTokenModel>(objReturnString);
+                            var resultToken = await getTokenValue(objToken.token_endpoint);
+                            objReturn.Extract(resultToken);
                         }
                         else
                         {
-                            var resultToken = await getTokenValue(tokenEndpointResponse?.TokenEndpoint ?? string.Empty);
-                            objReturn.Extract(resultToken);
+                            objReturn.ListErrors.Add($"An error has occurred in request initial configurations to '{urlAuthority}'.");
+                            var errorContent = await tokenEndpointResponse.Content.ReadAsStringAsync();
+                            objReturn.Error = errorContent;
+                            accessToken = string.Empty;
                         }
                     }
                     catch (Exception ex) { objReturn.Extract(ex); }
