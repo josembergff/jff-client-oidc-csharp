@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\jff_client_oidc_csharp\jff_client_oidc_csharp.csproj" />
-    <ProjectReference Include="..\jff_client_oidc_csharp_legacy\jff_client_oidc_csharp_legacy.csproj" />
   </ItemGroup>
 
 </Project>
