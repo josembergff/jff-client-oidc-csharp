@@ -2,7 +2,22 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Title>Client OIDC C# Classic</Title>
+    <Version>1.0.0</Version>
+    <Authors>Josemberg Farias Ferreira</Authors>
+    <Description>Simple client for request OIDC token and requests for .net classic</Description>
+    <PackageProjectUrl>https://www.nuget.org/packages/jff-client-oidc-csharp_legacy</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/josembergff/jff-client-oidc-csharp</RepositoryUrl>
+    <PackageTags>oidc;c#;openid;token;auth2</PackageTags>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
