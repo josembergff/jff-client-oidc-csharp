@@ -1,9 +1,7 @@
 # Client OIDC C#
 Simple client for request OIDC token and requests. Having the standard version and the version for the .net classic system.
 
-## Install
-
-Package Manager
+## Install Package Manager
 
 ```bash
 PM> Install-Package jff_client_oidc_csharp
@@ -15,7 +13,7 @@ for .net classic
 PM> Install-Package jff_client_oidc_csharp_legacy
 ```
 
-or .NET CLI
+## Install .NET CLI
 
 ```bash
 > dotnet add package jff_client_oidc_csharp
@@ -27,7 +25,7 @@ for .net classic
 > dotnet add package jff_client_oidc_csharp_legacy
 ```
 
-or Paket CLI
+## Install Paket CLI
 
 ```bash
 > paket add jff_client_oidc_csharp
@@ -57,7 +55,7 @@ namespace ExampleConnectOIDC
             return await client.Get<dynamic>(url);
         }
 
-        public async Task<string> GetToken(string url, string method){
+        public async Task<string> GetToken(){
             return await client.GetToken();
         }
     }
@@ -79,11 +77,11 @@ namespace ExampleConnectOIDC
         }
 
         public async Task<dynamic> GetApiOIDC(string url){
-            return await client.Get<dynamic>(url);
+            return client.Get<dynamic>(url);
         }
 
-        public async Task<string> GetToken(string url, string method){
-            return await client.GetToken();
+        public async Task<string> GetToken(){
+            return client.GetToken();
         }
     }
  }

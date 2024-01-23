@@ -1,9 +1,7 @@
 ﻿using Models;
 using Newtonsoft.Json;
 using System;
-using System.Text;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
 using System.Net;
 
@@ -28,7 +26,7 @@ namespace jff_client_oidc_csharp_legacy
             accessToken = string.Empty;
         }
 
-        public async Task<DefaultResponseModel<string>> GetToken()
+        public DefaultResponseModel<string> GetToken()
         {
             var objReturn = new DefaultResponseModel<string>();
             if (!string.IsNullOrEmpty(urlAuthority))
@@ -42,7 +40,7 @@ namespace jff_client_oidc_csharp_legacy
                             webClient.BaseAddress = urlAuthority + "/";
                             var json = webClient.DownloadString(".well-known/openid-configuration");
                             var objToken = JsonConvert.DeserializeObject<DefaultConfigTokenModel>(json);
-                            var resultToken = await getTokenValue(objToken.token_endpoint);
+                            var resultToken = getTokenValue(objToken.token_endpoint);
                             objReturn.Extract(resultToken);
                         }
                     }
@@ -62,7 +60,7 @@ namespace jff_client_oidc_csharp_legacy
             return objReturn;
         }
 
-        private async Task<DefaultResponseModel<string>> getTokenValue(string urlToken)
+        private DefaultResponseModel<string> getTokenValue(string urlToken)
         {
             var objReturn = new DefaultResponseModel<string>();
             if (!string.IsNullOrEmpty(urlToken))
