@@ -1,6 +1,4 @@
-﻿using Models;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -26,9 +24,9 @@ namespace jff_client_oidc_csharp_legacy
             accessToken = string.Empty;
         }
 
-        public DefaultResponseModel<string> GetToken()
+        public string GetToken()
         {
-            var objReturn = new DefaultResponseModel<string>();
+            var objReturn = "";
             if (!string.IsNullOrEmpty(urlAuthority))
             {
                 if (expireDate <= DateTime.Now)
@@ -39,30 +37,28 @@ namespace jff_client_oidc_csharp_legacy
                         {
                             webClient.BaseAddress = urlAuthority + "/";
                             var json = webClient.DownloadString(".well-known/openid-configuration");
-                            var objToken = JsonConvert.DeserializeObject<DefaultConfigTokenModel>(json);
-                            var resultToken = getTokenValue(objToken.token_endpoint);
-                            objReturn.Extract(resultToken);
+                            var resultToken = getTokenValue("");
+                            objReturn = resultToken;
                         }
                     }
                     catch (Exception ex)
                     {
-                        objReturn.ListErrors.Add($"An error has occurred in request initial configurations to '{urlAuthority}'.");
+                        Console.WriteLine($"An error has occurred in request initial configurations to '{urlAuthority}'.");
                         accessToken = string.Empty;
-                        objReturn.Extract(ex);
                     }
                 }
             }
             else
             {
-                objReturn.ListErrors.Add("The parameter 'urlAuthority' is required in the create new instance class.");
+                Console.WriteLine("The parameter 'urlAuthority' is required in the create new instance class.");
             }
 
             return objReturn;
         }
 
-        private DefaultResponseModel<string> getTokenValue(string urlToken)
+        private string getTokenValue(string urlToken)
         {
-            var objReturn = new DefaultResponseModel<string>();
+            var objReturn = "";
             if (!string.IsNullOrEmpty(urlToken))
             {
                 try
@@ -82,28 +78,27 @@ namespace jff_client_oidc_csharp_legacy
                         }
                         string data = $"client_id={clientId}&client_secret={clientSecret}&grant_type=client_credentials&scope={scope}";
                         var response = webClient.UploadString(pathUrl, "POST", data);
-                        var objToken = JsonConvert.DeserializeObject<DefaultResponseTokenModel>(response);
+                        var objToken = 0;
 
-                        if (objToken.expires_in > 0)
+                        if (objToken > 0)
                         {
-                            expireDate = DateTime.Now.AddSeconds(objToken.expires_in);
+                            expireDate = DateTime.Now.AddSeconds(objToken);
                         }
 
-                        accessToken = objToken.access_token ?? string.Empty;
+                        accessToken = string.Empty;
 
-                        objReturn.Result = accessToken;
+                        objReturn = accessToken;
                     }
                 }
                 catch (Exception ex)
                 {
-                    objReturn.ListErrors.Add($"An error has occurred in request to '{urlToken}'.");
+                    Console.WriteLine($"An error has occurred in request to '{urlToken}'.");
                     accessToken = string.Empty;
-                    objReturn.Extract(ex);
                 }
             }
             else
             {
-                objReturn.ListErrors.Add("The parameter 'urlToken' is required.");
+                Console.WriteLine("The parameter 'urlToken' is required.");
                 accessToken = string.Empty;
             }
 
