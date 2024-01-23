@@ -4,9 +4,9 @@ using System.Net.Http;
 using System;
 using System.Text;
 using System.Threading.Tasks;
-using jff_client_oidc_csharp.Models;
 using System.Linq;
 using System.Net.Http.Headers;
+using Models;
 
 namespace jff_client_oidc_csharp
 {
