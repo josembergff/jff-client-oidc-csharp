@@ -71,9 +71,9 @@ namespace ExampleConnectOIDC
 {
     public class ConnectOIDC
     {
-        private readonly ClientCredentials client;
+        private readonly ClientCredentialsLegacy client;
         public ConnectOIDC(){}
-            client = new ClientCredentials("{urlAuthority}", "{clientId}", "{clientSecret}", new string[] { "openid" });
+            client = new ClientCredentialsLegacy("{urlAuthority}", "{clientId}", "{clientSecret}", new string[] { "openid" });
         }
 
         public async Task<dynamic> GetApiOIDC(string url){
