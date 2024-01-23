@@ -1,16 +1,8 @@
 ﻿using jff_client_oidc_csharp;
-using jff_client_oidc_csharp_legacy;
 
 Console.WriteLine("Hello, World!");
 
-testeClientLegacy();
-
-void testeClientLegacy()
-{
-    var client = new ClientCredentialsLegacy("https://localhost:62862", "api", "secret", new string[] { "openid" });
-
-    var token = client.GetToken();
-}
+testeClient();
 
 void testeClient()
 {
