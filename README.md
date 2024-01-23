@@ -76,11 +76,7 @@ namespace ExampleConnectOIDC
             client = new ClientCredentialsLegacy("{urlAuthority}", "{clientId}", "{clientSecret}", new string[] { "openid" });
         }
 
-        public async Task<dynamic> GetApiOIDC(string url){
-            return client.Get<dynamic>(url);
-        }
-
-        public async Task<string> GetToken(){
+        public string GetToken(){
             return client.GetToken();
         }
     }

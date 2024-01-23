@@ -9,7 +9,7 @@ void testeClientLegacy()
 {
     var client = new ClientCredentialsLegacy("https://localhost:62862", "api", "secret", new string[] { "openid" });
 
-    var token = client.GetToken().Result;
+    var token = client.GetToken();
 }
 
 void testeClient()

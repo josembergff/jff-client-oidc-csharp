@@ -1,5 +1,5 @@
-﻿using Models;
-using Newtonsoft.Json;
+﻿using jff_client_oidc_csharp_legacy.Models;
+using jff_client_oidc_csharp_legacy.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,7 +39,7 @@ namespace jff_client_oidc_csharp_legacy
                         {
                             webClient.BaseAddress = urlAuthority + "/";
                             var json = webClient.DownloadString(".well-known/openid-configuration");
-                            var objToken = JsonConvert.DeserializeObject<DefaultConfigTokenModel>(json);
+                            var objToken = JsonConverter.JsonDeserializer<DefaultConfigTokenModel>(json);
                             var resultToken = getTokenValue(objToken.token_endpoint);
                             objReturn.Extract(resultToken);
                         }
@@ -82,7 +82,7 @@ namespace jff_client_oidc_csharp_legacy
                         }
                         string data = $"client_id={clientId}&client_secret={clientSecret}&grant_type=client_credentials&scope={scope}";
                         var response = webClient.UploadString(pathUrl, "POST", data);
-                        var objToken = JsonConvert.DeserializeObject<DefaultResponseTokenModel>(response);
+                        var objToken = JsonConverter.JsonDeserializer<DefaultResponseTokenModel>(response);
 
                         if (objToken.expires_in > 0)
                         {
