@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,7 +43,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientCredentialsLegacy.cs" />
+    <Compile Include="Models\DefaultConfigTokenModel.cs" />
+    <Compile Include="Models\DefaultResponseModel.cs" />
+    <Compile Include="Models\DefaultResponseTokenModel.cs" />
+    <Compile Include="Models\SendRequestTokenModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools\JsonConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="jff_client_oidc_csharp_legacy.nuspec" />

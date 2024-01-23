@@ -1,4 +1,6 @@
-﻿using System;
+﻿using jff_client_oidc_csharp_legacy.Models;
+using jff_client_oidc_csharp_legacy.Tools;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -24,9 +26,9 @@ namespace jff_client_oidc_csharp_legacy
             accessToken = string.Empty;
         }
 
-        public string GetToken()
+        public DefaultResponseModel<string> GetToken()
         {
-            var objReturn = "";
+            var objReturn = new DefaultResponseModel<string>();
             if (!string.IsNullOrEmpty(urlAuthority))
             {
                 if (expireDate <= DateTime.Now)
@@ -37,28 +39,30 @@ namespace jff_client_oidc_csharp_legacy
                         {
                             webClient.BaseAddress = urlAuthority + "/";
                             var json = webClient.DownloadString(".well-known/openid-configuration");
-                            var resultToken = getTokenValue("");
-                            objReturn = resultToken;
+                            var objToken = JsonConverter.JsonDeserializer<DefaultConfigTokenModel>(json);
+                            var resultToken = getTokenValue(objToken.token_endpoint);
+                            objReturn.Extract(resultToken);
                         }
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"An error has occurred in request initial configurations to '{urlAuthority}'.");
+                        objReturn.ListErrors.Add($"An error has occurred in request initial configurations to '{urlAuthority}'.");
                         accessToken = string.Empty;
+                        objReturn.Extract(ex);
                     }
                 }
             }
             else
             {
-                Console.WriteLine("The parameter 'urlAuthority' is required in the create new instance class.");
+                objReturn.ListErrors.Add("The parameter 'urlAuthority' is required in the create new instance class.");
             }
 
             return objReturn;
         }
 
-        private string getTokenValue(string urlToken)
+        private DefaultResponseModel<string> getTokenValue(string urlToken)
         {
-            var objReturn = "";
+            var objReturn = new DefaultResponseModel<string>();
             if (!string.IsNullOrEmpty(urlToken))
             {
                 try
@@ -78,27 +82,28 @@ namespace jff_client_oidc_csharp_legacy
                         }
                         string data = $"client_id={clientId}&client_secret={clientSecret}&grant_type=client_credentials&scope={scope}";
                         var response = webClient.UploadString(pathUrl, "POST", data);
-                        var objToken = 0;
+                        var objToken = JsonConverter.JsonDeserializer<DefaultResponseTokenModel>(response);
 
-                        if (objToken > 0)
+                        if (objToken.expires_in > 0)
                         {
-                            expireDate = DateTime.Now.AddSeconds(objToken);
+                            expireDate = DateTime.Now.AddSeconds(objToken.expires_in);
                         }
 
-                        accessToken = string.Empty;
+                        accessToken = objToken.access_token ?? string.Empty;
 
-                        objReturn = accessToken;
+                        objReturn.Result = accessToken;
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"An error has occurred in request to '{urlToken}'.");
+                    objReturn.ListErrors.Add($"An error has occurred in request to '{urlToken}'.");
                     accessToken = string.Empty;
+                    objReturn.Extract(ex);
                 }
             }
             else
             {
-                Console.WriteLine("The parameter 'urlToken' is required.");
+                objReturn.ListErrors.Add("The parameter 'urlToken' is required.");
                 accessToken = string.Empty;
             }
 
