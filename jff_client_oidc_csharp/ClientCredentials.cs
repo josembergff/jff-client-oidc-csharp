@@ -209,7 +209,9 @@ namespace jff_client_oidc_csharp
                 var response = await apiClient.PutAsync(urlApi, contentData);
                 if (!response.IsSuccessStatusCode)
                 {
-                    Console.WriteLine(response.StatusCode);
+                    objReturn.ListErrors.Add($"An error has occurred in PUT request to '{urlApi}'.");
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    objReturn.Error = errorContent;
                 }
                 else if (response.Content != null)
                 {
@@ -232,7 +234,9 @@ namespace jff_client_oidc_csharp
                 var response = await apiClient.DeleteAsync(urlApi);
                 if (!response.IsSuccessStatusCode)
                 {
-                    Console.WriteLine(response.StatusCode);
+                    objReturn.ListErrors.Add($"An error has occurred in DELETE request to '{urlApi}'.");
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    objReturn.Error = errorContent;
                 }
                 else if (response.Content != null)
                 {
