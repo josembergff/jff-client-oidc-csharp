@@ -18,7 +18,7 @@ namespace jff_client_oidc_csharp_legacy
         private string accessToken;
         private DateTime expireDate;
 
-        public ClientCredentialsLegacy(string urlAuthority, string clientId, string clientSecret, IEnumerable<string> scopes, Encoding encoding = null, string mediaType = null)
+        public ClientCredentialsLegacy(string urlAuthority, string clientId, string clientSecret, IEnumerable<string> scopes)
         {
             this.urlAuthority = urlAuthority;
             this.clientId = clientId;
