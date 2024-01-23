@@ -42,11 +42,11 @@ namespace ExampleConnectOIDC
         }
 
         public async Task<dynamic> PostApiRest(string url, dynamic objSend){
-            return await client.Post<dynamic>(url, objSend);
+            return await client.Post<dynamic, dynamic>(url, objSend);
         }
 
         public async Task<dynamic> PutApiRest(string url, dynamic objSend){
-            return await client.Put<dynamic>(url, objSend);
+            return await client.Put<dynamic, dynamic>(url, objSend);
         }
 
         public async Task<dynamic> DeleteApiRest(string url){
