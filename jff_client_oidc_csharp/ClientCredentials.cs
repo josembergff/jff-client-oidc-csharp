@@ -73,6 +73,8 @@ namespace jff_client_oidc_csharp
                     }
                     catch (Exception ex) { objReturn.Extract(ex); }
                 }
+
+                objReturn.Result = accessToken;
             }
             else
             {
