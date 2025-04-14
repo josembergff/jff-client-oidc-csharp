@@ -32,7 +32,8 @@ namespace jff_client_oidc_csharp
         /// <param name="scopes">Required - Lista scopes from client in authority OIDC type Client Credentials</param>
         /// <param name="encoding">Optional - Default value: UTF8 - Type encoding from values send in POST and PUT request to API</param>
         /// <param name="mediaType">Optional - Default value: application/json - Type media from values send in POST and PUT request to API</param>
-        public ClientCredentials(string urlAuthority, string clientId, string clientSecret, IEnumerable<string> scopes, Encoding encoding = null, string mediaType = null)
+        /// <param name="timeout">Optional - Default value: null - Timeout for HttpClient requests</param>
+        public ClientCredentials(string urlAuthority, string clientId, string clientSecret, IEnumerable<string> scopes, Encoding encoding = null, string mediaType = null, TimeSpan? timeout = null)
         {
             this.urlAuthority = urlAuthority;
             this.clientId = clientId;
@@ -43,6 +44,14 @@ namespace jff_client_oidc_csharp
             expireDate = DateTime.MinValue;
             client = new HttpClient();
             apiClient = new HttpClient();
+
+            // Configura o timeout, se especificado
+            if (timeout.HasValue)
+            {
+                client.Timeout = timeout.Value;
+                apiClient.Timeout = timeout.Value;
+            }
+
             accessToken = string.Empty;
         }
 
