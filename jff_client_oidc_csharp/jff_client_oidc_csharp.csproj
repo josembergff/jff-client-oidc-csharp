@@ -6,13 +6,13 @@
     <Title>Client OIDC C#</Title>
     <Authors>Josemberg Farias Ferreira</Authors>
     <Description>Simple client for request OIDC token and requests</Description>
-    <PackageProjectUrl>https://www.nuget.org/packages/jff-client-oidc-csharp</PackageProjectUrl>
+    <PackageProjectUrl>https://www.nuget.org/packages/jff_client_oidc_csharp</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/josembergff/jff-client-oidc-csharp</RepositoryUrl>
     <NeutralLanguage>en</NeutralLanguage>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <Version>1.0.6</Version>
+    <Version>1.0.7</Version>
     <PackageTags>oidc;c#;openid;token;auth2</PackageTags>
     <PackageReleaseNotes></PackageReleaseNotes>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
